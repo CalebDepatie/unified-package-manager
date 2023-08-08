@@ -1,0 +1,13 @@
+name = "apt"
+
+[install]
+name = "install"
+
+[remove]
+name = "remove"
+
+[update]
+name = ["update", "upgrade"]
+
+[search]
+name = "search"

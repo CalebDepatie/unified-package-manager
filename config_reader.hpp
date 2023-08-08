@@ -1,20 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <utility>
+#include "PackageManager.hpp"
 
-using CmdArgMapping = std::pair<std::string, std::string>;
-
-class Command {
-	std::string Name;
-	std::vector<CmdArgMapping> Arguments;
-};
-
-class PackageManager {
-	std::vector<CmdArgMapping> GlobalArgs;
-	Command Install;
-	Command Remove;
-	Command Update;
-	Command Search;
-};
+// This will enumerate through all toml files in the given director, returning the managers
+std::vector<PackageManager> ReadConfigs(std::string config_dir);
