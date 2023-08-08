@@ -19,6 +19,13 @@ public:
 	void SetRemoveCommand(Command cmd);
 	void SetUpdateCommand(Command cmd);
 	void SetSearchCommand(Command cmd);
+	
+	std::string GetName() const;
+
+	std::string ExecuteInstall(std::vector<std::string> args);
+	std::string ExecuteRemove(std::vector<std::string> args);
+	std::string ExecuteUpdate(std::vector<std::string> args);
+	std::string ExecuteSearch(std::string search_term, std::vector<std::string> args);
 
 	friend std::ostream& operator<<(std::ostream& os, const PackageManager& pm) {
 		os << "PackageManager(Name=" << pm.Name << ")";

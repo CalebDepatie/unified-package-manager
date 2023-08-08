@@ -14,4 +14,5 @@ public:
 	Command();
 	void AddArgMapping(std::string arg, std::string mapping);
 	void SetName(std::vector<std::string> name);
+	std::string MapCmd(std::vector<std::string> args);
 };

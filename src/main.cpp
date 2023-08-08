@@ -59,7 +59,15 @@ int main(int argc, char** argv) {
 		std::cout << "upgrade command used" << std::endl;
 
 	} else if (program.is_subcommand_used(search_command)) {
-		std::cout << "search command used" << std::endl;
+		// std::cout << "search command used" << std::endl;
+		
+		// Collect arguments
+		std::vector<std::string> args;
+		std::string search_term = search_command.get<std::string>("search-term");
+
+		for (auto pkg_mng : managers) {
+			std::cout << pkg_mng.ExecuteSearch(search_term, args) << std::endl;
+		}
 
 	} else {
 		std::cout << program;
