@@ -3,6 +3,8 @@
 
 #include "config_reader.hpp"
 
+const std::string CONFIG_DIR = "/usr/share/upm/configs/";
+
 int main(int argc, char** argv) {
 
 	// -- Arguments Parsing SS--
@@ -48,7 +50,7 @@ int main(int argc, char** argv) {
 
 	// -- Command Dispatch --
 	// Collect all the managers
-	std::vector<PackageManager> managers = ReadConfigs("../configs"); // todo: this should be a /etc/ location
+	std::vector<PackageManager> managers = ReadConfigs(CONFIG_DIR);
 
 	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {
@@ -57,8 +59,10 @@ int main(int argc, char** argv) {
 		std::vector<std::string> args;
 		auto pkgs = add_command.get<std::vector<std::string>>("packages");
 
+		// todo: install and uninstall should stop after the first success
 		for (auto pkg_mng : managers) {
 			auto res = pkg_mng.ExecuteInstall(pkgs, args);
+
 		}
 		
 	} else if (program.is_subcommand_used(del_command)) {
@@ -90,7 +94,7 @@ int main(int argc, char** argv) {
 		std::string search_term = search_command.get<std::string>("search-term");
 
 		for (auto pkg_mng : managers) {
-			std::cout << pkg_mng.ExecuteSearch(search_term, args) << std::endl;
+			auto res = pkg_mng.ExecuteSearch(search_term, args);
 		}
 
 	} else {
