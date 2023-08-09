@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "common.hpp"
+
 PackageManager::PackageManager(std::string name) : Name(name) {}
 
 void PackageManager::AddGlobalArgMapping(std::string arg, std::string mapping) {
@@ -29,30 +31,38 @@ std::string PackageManager::GetName() const {
 	return this->Name; 
 }
 
-std::string PackageManager::ExecuteInstall(std::vector<std::string> args) {
-	auto cmd = this->Install.MapCmd(args);
-	
-	return this->Name + cmd;
-}
-
-std::string PackageManager::ExecuteRemove(std::vector<std::string> args) {
-	auto cmd = this->Remove.MapCmd(args);
-	
-	return this->Name + cmd;
-}
-
-std::string PackageManager::ExecuteUpdate(std::vector<std::string> args) {
-	auto cmd = this->Update.MapCmd(args);
-	
-	return this->Name + cmd;
-}
-
-std::string PackageManager::ExecuteSearch(std::string search_term, std::vector<std::string> args) {
-	auto cmd = this->Search.MapCmd(args);
+int PackageManager::ExecuteInstall(std::vector<std::string> packages, std::vector<std::string> args) {
+	auto cmd = this->Install.MapCmd(this->Name, args);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
 
-	std::system((this->Name + cmd + " " + search_term).c_str());
+	return std::system((cmd + " " + join_strings(packages, " ")).c_str());
+}
+
+int PackageManager::ExecuteRemove(std::vector<std::string> packages, std::vector<std::string> args) {
+	auto cmd = this->Remove.MapCmd(this->Name, args);
+
+	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	return std::system((cmd + " " + join_strings(packages, " ")).c_str());
+}
+
+int PackageManager::ExecuteUpdate(std::vector<std::string> packages, std::vector<std::string> args) {
+	auto cmd = this->Update.MapCmd(this->Name, args);
+
+	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	if (packages.size() == 0)
+		return std::system((cmd).c_str());
 	
-	return "";
+	else
+		return std::system((cmd + " " + join_strings(packages, " ")).c_str());
+}
+
+int PackageManager::ExecuteSearch(std::string search_term, std::vector<std::string> args) {
+	auto cmd = this->Search.MapCmd(this->Name, args);
+
+	std::cout << " -- " << this->Name << " -- " << std::endl;
+	
+	return std::system((cmd + " " + search_term).c_str());;
 }

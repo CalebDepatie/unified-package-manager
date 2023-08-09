@@ -22,10 +22,10 @@ public:
 	
 	std::string GetName() const;
 
-	std::string ExecuteInstall(std::vector<std::string> args);
-	std::string ExecuteRemove(std::vector<std::string> args);
-	std::string ExecuteUpdate(std::vector<std::string> args);
-	std::string ExecuteSearch(std::string search_term, std::vector<std::string> args);
+	int ExecuteInstall(std::vector<std::string> packages, std::vector<std::string> args);
+	int ExecuteRemove(std::vector<std::string> packages, std::vector<std::string> args);
+	int ExecuteUpdate(std::vector<std::string> packages, std::vector<std::string> args);
+	int ExecuteSearch(std::string search_term, std::vector<std::string> args);
 
 	friend std::ostream& operator<<(std::ostream& os, const PackageManager& pm) {
 		os << "PackageManager(Name=" << pm.Name << ")";

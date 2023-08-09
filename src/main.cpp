@@ -21,10 +21,11 @@ int main(int argc, char** argv) {
 			.help("package[s] to remove")
 			.nargs(argparse::nargs_pattern::at_least_one);
 
-	argparse::ArgumentParser upgrade_command("upgrade");
-	upgrade_command.add_description("Upgrade the system or specific packages");
-	upgrade_command.add_argument("packages")
-			.help("package[s] to upgrade. leave blank to upgrade the system")
+	argparse::ArgumentParser update_command("update");
+	update_command.add_description("Update the system or specific packages");
+	update_command.add_argument("packages")
+			.help("package[s] to update. leave blank to update the system")
+			.default_value<std::vector<std::string>>({})
 			.remaining();
 
 	argparse::ArgumentParser search_command("search");
@@ -34,7 +35,7 @@ int main(int argc, char** argv) {
 
 	program.add_subparser(add_command);
 	program.add_subparser(del_command);
-	program.add_subparser(upgrade_command);
+	program.add_subparser(update_command);
 	program.add_subparser(search_command);
 
 	try {
@@ -49,14 +50,37 @@ int main(int argc, char** argv) {
 	// Collect all the managers
 	std::vector<PackageManager> managers = ReadConfigs("../configs"); // todo: this should be a /etc/ location
 
+	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {
-		std::cout << "add command used" << std::endl;
+		// std::cout << "add command used" << std::endl;
+
+		std::vector<std::string> args;
+		auto pkgs = add_command.get<std::vector<std::string>>("packages");
+
+		for (auto pkg_mng : managers) {
+			auto res = pkg_mng.ExecuteInstall(pkgs, args);
+		}
 		
 	} else if (program.is_subcommand_used(del_command)) {
-		std::cout << "del command used" << std::endl;
+		// std::cout << "del command used" << std::endl;
 
-	} else if (program.is_subcommand_used(upgrade_command)) {
-		std::cout << "upgrade command used" << std::endl;
+		std::vector<std::string> args;
+		auto pkgs = del_command.get<std::vector<std::string>>("packages");
+
+		for (auto pkg_mng : managers) {
+			auto res = pkg_mng.ExecuteRemove(pkgs, args);
+		}
+
+	} else if (program.is_subcommand_used(update_command)) {
+		// std::cout << "upgrade command used" << std::endl;
+
+		// Collect arguments
+		std::vector<std::string> args;
+		auto pkgs = update_command.get<std::vector<std::string>>("packages");
+
+		for (auto pkg_mng : managers) {
+			auto res = pkg_mng.ExecuteUpdate(pkgs, args);
+		}
 
 	} else if (program.is_subcommand_used(search_command)) {
 		// std::cout << "search command used" << std::endl;
