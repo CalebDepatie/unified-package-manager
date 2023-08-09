@@ -12,6 +12,7 @@ src_files = [
 	'src/main.cpp',
 ]
 
+# is it required to specify it as a dependency to include / download the wrap?
 tomlplusplus_dep = dependency(
 	'tomlplusplus', 
 	default_options: [
@@ -22,8 +23,11 @@ tomlplusplus_dep = dependency(
 executable(
 	'upm',
 	src_files,
-	cpp_args: ['-std=c++20', '-DVERSION=' + SEM_VER],
-	dependencies: [tomlplusplus_dep],
+	cpp_args: [
+		'-std=c++20', 
+		'-DVERSION=' + SEM_VER
+	],
+	include_directories: include_directories('subprojects/tomlplusplus-3.3.0/include'),
 	install: true,
 	install_dir: '/usr/local/bin/',
 )

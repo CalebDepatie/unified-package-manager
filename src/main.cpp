@@ -3,7 +3,7 @@
 
 #include "config_reader.hpp"
 
-const std::string CONFIG_DIR = "/usr/share/upm/configs/";
+const std::string CONFIG_DIR = "/usr/local/etc/upm/configs/";
 
 int main(int argc, char** argv) {
 

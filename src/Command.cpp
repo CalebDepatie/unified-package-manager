@@ -1,7 +1,6 @@
 #include "Command.hpp"
 
 #include <numeric>
-#include <iostream>
 
 Command::Command() {}
 
@@ -34,8 +33,7 @@ std::string Command::MapCmd(std::string mng, std::vector<std::string> args) {
 	// 		}
 	// 	}
 	// }
-	
-	std::cout << cmd << " " << this->Name.size() << std::endl;
+
 
 	return cmd;
 }
