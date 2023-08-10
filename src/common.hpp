@@ -3,15 +3,11 @@
 #include <string>
 #include <vector>
 
-std::string join_strings(std::vector<std::string> strings, std::string delimiter) {
-	std::string result = "";
+// converting to constexprs as thats my preference
+#ifdef DEBUG
+	constexpr bool DEBUG_MODE = true;
+#else
+	constexpr bool DEBUG_MODE = false;
+#endif
 
-	for (auto it = strings.begin(); it != strings.end(); ++it) {
-		result += *it;
-
-		if (it != strings.end() - 1)
-			result += delimiter;
-	}
-
-	return result;
-}
+std::string join_strings(std::vector<std::string> strings, std::string delimiter);

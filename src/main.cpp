@@ -2,10 +2,19 @@
 #include <argparse/argparse.hpp>
 
 #include "config_reader.hpp"
+#include "common.hpp"
 
-const std::string CONFIG_DIR = "/usr/local/etc/upm/configs/";
+#ifdef DEBUG 
+	const std::string CONFIG_DIR = "../configs/";
+#else
+	const std::string CONFIG_DIR = std::string(DATA_DIR) + "configs/";
+#endif
 
 int main(int argc, char** argv) {
+
+	if constexpr (DEBUG_MODE) {
+		std::cout << "DEBUG: Running in debug mode. Expect verbose output" << std::endl;
+	}
 
 	// -- Arguments Parsing SS--
 	argparse::ArgumentParser program("upm", VERSION);
