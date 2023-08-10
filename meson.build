@@ -1,4 +1,8 @@
-project('unified-package-manager', 'cpp')
+project(
+	'unified-package-manager', 
+	'cpp',
+	license: 'BSD-3-Clause',
+)
 
 MAJOR_VER = '0'
 MINOR_VER = '1'
@@ -12,13 +16,14 @@ src_files = [
 	'src/main.cpp',
 ]
 
-# is it required to specify it as a dependency to include / download the wrap?
 tomlplusplus_dep = dependency(
 	'tomlplusplus', 
 	default_options: [
 		'build_lib=false'
 	]
-)
+).partial_dependency(includes:true)
+
+tomlplusplus_inc = tomlplusplus_dep
 
 executable(
 	'upm',
@@ -27,7 +32,9 @@ executable(
 		'-std=c++20', 
 		'-DVERSION=' + SEM_VER
 	],
-	include_directories: include_directories('subprojects/tomlplusplus-3.3.0/include'),
+	dependencies: [
+		tomlplusplus_dep
+	],
 	install: true,
 	install_dir: '/usr/local/bin/',
 )
