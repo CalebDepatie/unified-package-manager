@@ -1,0 +1,2 @@
+option('install_dir', type: 'string', value: '/usr/local/bin/', description: 'Installation directory')
+option('data_dir', type: 'string', value: '/usr/local/etc/upm/', description: 'Data directory. Stores configurations and more')
