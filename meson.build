@@ -81,6 +81,9 @@ tomlplusplus_dep = dependency(
 
 tomlplusplus_inc = tomlplusplus_dep
 
+# polkit_dep = dependency('polkit-gobject-1')
+# glib_dep = dependency('glib-2.0')
+
 executable(
 	'upm',
 	src_files,
@@ -89,7 +92,9 @@ executable(
 		additional_cxx_args,
 	],
 	dependencies: [
-		tomlplusplus_dep
+		tomlplusplus_dep,
+		# polkit_dep,
+		# glib_dep,
 	],
 	install: true,
 	install_dir: INSTALL_DIR,

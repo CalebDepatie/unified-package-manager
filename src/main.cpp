@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 #include <argparse/argparse.hpp>
 
 #include "config_reader.hpp"
@@ -9,6 +10,8 @@
 #else
 	const std::string CONFIG_DIR = std::string(DATA_DIR) + "configs/";
 #endif
+
+bool stdAuth();
 
 int main(int argc, char** argv) {
 
@@ -61,6 +64,14 @@ int main(int argc, char** argv) {
 	// Collect all the managers
 	std::vector<PackageManager> managers = ReadConfigs(CONFIG_DIR);
 
+	bool authenticated = stdAuth();
+
+	if (!authenticated) {
+		std::cout << "You must be root to use this program reliably." << std::endl;
+		std::cout << "Many package managers will require elevated permissions to run." << std::endl;
+		return 0;
+	}
+
 	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {
 		// std::cout << "add command used" << std::endl;
@@ -111,4 +122,11 @@ int main(int argc, char** argv) {
 	}
 
 	return 0;
+}
+
+bool stdAuth() {
+	if (geteuid() == 0)
+		return true;
+
+	return false;
 }
