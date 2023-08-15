@@ -5,15 +5,26 @@
 #include <cstdlib>
 #include <string>
 
+#include "common.hpp"
+
 PackageManager ParseConfig(std::string config_path);
 Command ParseCommand(toml::table tbl);
 
 std::vector<PackageManager> ReadConfigs(std::string config_dir) {
+	if constexpr (DEBUG_MODE) {
+		std::cout << "Reading configs from " << config_dir << std::endl;
+		std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+	}
+
 	std::vector<PackageManager> managers;
 	for (auto& p : std::filesystem::directory_iterator(config_dir)) {
 
 		if (p.path().extension() == ".toml") {
 			// todo: check if the manager exists before bothing to parse it
+
+			if constexpr (DEBUG_MODE) {
+				std::cout << "Reading config " << p.path() << "\n";
+			}
 			
 			try {
 				auto new_manager = ParseConfig(p.path().string());

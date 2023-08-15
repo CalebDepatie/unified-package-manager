@@ -6,7 +6,7 @@ project(
 
 cpp = meson.get_compiler('cpp')
 
-# Various variables that get passed as defines
+# Various variables for initilzation, can be tweaked by options or present libraries
 
 MAJOR_VER = '0'
 MINOR_VER = '1'
@@ -19,6 +19,8 @@ additional_cxx_args = [
 	'-DVERSION=' + SEM_VER,
 	'-DDATA_DIR="' + DATA_DIR + '"',
 ]
+
+deps = []
 
 if get_option('debug')
 	# I'm not sure how to use meson built-in options via the script, so I have to make due
@@ -70,6 +72,8 @@ src_files = [
 	'src/PackageManager.cpp',
 	'src/config_reader.cpp',
 	'src/main.cpp',
+	'src/Authentication/stdAuth.cpp',
+	# 'src/Authentication/polkitAuth.cpp',
 ]
 
 tomlplusplus_dep = dependency(
@@ -79,10 +83,11 @@ tomlplusplus_dep = dependency(
 	]
 ).partial_dependency(includes:true)
 
-tomlplusplus_inc = tomlplusplus_dep
+deps += tomlplusplus_dep
 
 # polkit_dep = dependency('polkit-gobject-1')
 # glib_dep = dependency('glib-2.0')
+# deps += [ polkit_dep, glib_dep ]
 
 executable(
 	'upm',
@@ -92,9 +97,7 @@ executable(
 		additional_cxx_args,
 	],
 	dependencies: [
-		tomlplusplus_dep,
-		# polkit_dep,
-		# glib_dep,
+		deps,
 	],
 	install: true,
 	install_dir: INSTALL_DIR,

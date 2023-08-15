@@ -1,17 +1,17 @@
 #include <iostream>
-#include <unistd.h>
 #include <argparse/argparse.hpp>
 
 #include "config_reader.hpp"
 #include "common.hpp"
 
+#include "Authentication/stdAuth.hpp"
+// #include "Authentication/polkitAuth.hpp"
+
 #ifdef DEBUG 
-	const std::string CONFIG_DIR = "../configs/";
+	const std::string CONFIG_DIR = "./configs/";
 #else
 	const std::string CONFIG_DIR = std::string(DATA_DIR) + "configs/";
 #endif
-
-bool stdAuth();
 
 int main(int argc, char** argv) {
 
@@ -64,17 +64,19 @@ int main(int argc, char** argv) {
 	// Collect all the managers
 	std::vector<PackageManager> managers = ReadConfigs(CONFIG_DIR);
 
-	bool authenticated = stdAuth();
+	auto authenticator = stdAuth();
+	// auto authenticator = polkitAuth();
 
-	if (!authenticated) {
-		std::cout << "You must be root to use this program reliably." << std::endl;
-		std::cout << "Many package managers will require elevated permissions to run." << std::endl;
-		return 0;
+	if (!authenticator.IsAuthenticated()) {
+		if constexpr (DEBUG_MODE) {
+			std::cout << "Not currently Authentication. Attempting to elevate." << std::endl;
+		}
+
+		authenticator.Authenticate();
 	}
 
 	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {
-		// std::cout << "add command used" << std::endl;
 
 		std::vector<std::string> args;
 		auto pkgs = add_command.get<std::vector<std::string>>("packages");
@@ -82,11 +84,9 @@ int main(int argc, char** argv) {
 		// todo: install and uninstall should stop after the first success
 		for (auto pkg_mng : managers) {
 			auto res = pkg_mng.ExecuteInstall(pkgs, args);
-
 		}
 		
 	} else if (program.is_subcommand_used(del_command)) {
-		// std::cout << "del command used" << std::endl;
 
 		std::vector<std::string> args;
 		auto pkgs = del_command.get<std::vector<std::string>>("packages");
@@ -96,7 +96,6 @@ int main(int argc, char** argv) {
 		}
 
 	} else if (program.is_subcommand_used(update_command)) {
-		// std::cout << "upgrade command used" << std::endl;
 
 		// Collect arguments
 		std::vector<std::string> args;
@@ -107,7 +106,6 @@ int main(int argc, char** argv) {
 		}
 
 	} else if (program.is_subcommand_used(search_command)) {
-		// std::cout << "search command used" << std::endl;
 		
 		// Collect arguments
 		std::vector<std::string> args;
@@ -122,11 +120,4 @@ int main(int argc, char** argv) {
 	}
 
 	return 0;
-}
-
-bool stdAuth() {
-	if (geteuid() == 0)
-		return true;
-
-	return false;
 }
