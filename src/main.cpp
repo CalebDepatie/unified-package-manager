@@ -1,22 +1,40 @@
 #include <iostream>
 #include <argparse/argparse.hpp>
+#include <libguile.h>
 
-#include "config_reader.hpp"
 #include "common.hpp"
+#include "PackageManager.hpp"
 
-#ifdef DEBUG 
-	const std::string CONFIG_DIR = "../configs/";
-#else
-	const std::string CONFIG_DIR = std::string(DATA_DIR) + "configs/";
-#endif
+#include "guile/upm_script.h"
+
+void* guile_main(void *data)
+{
+  // Load in the script
+  // scm_c_primitive_load((CONFIG_DIR + "upm.scm").c_str());
+	const char* guile_script = reinterpret_cast<const char*>(src_guile_upm_scm);
+	scm_c_eval_string(guile_script);
+
+  // Call a function from the script
+  // scm_call_1(scm_c_lookup("my-guile-function"), scm_from_int(42));
+
+  // Enter a Guile shell
+  // scm_shell(argc, argv);
+}
 
 int main(int argc, char** argv) {
 
-	if constexpr (DEBUG_MODE) {
-		std::cout << "DEBUG: Running in debug mode. Expect verbose output" << std::endl;
-	}
+	print_debug("Running in debug mode. Expect verbose output");
 
-	// -- Arguments Parsing SS--
+	// Initialize Guile
+	print_debug("Initializing Guile...");
+
+  scm_init_guile();
+  scm_with_guile(guile_main, 0);
+
+
+	// -- Arguments Parsing --
+	print_debug("Parsing arguments...");
+
 	argparse::ArgumentParser program("upm", VERSION);
 	program.add_description("Universal Package Manager - Interact with all your package managers from one place");
 
@@ -59,7 +77,9 @@ int main(int argc, char** argv) {
 
 	// -- Command Dispatch --
 	// Collect all the managers
-	std::vector<PackageManager> managers = ReadConfigs(CONFIG_DIR);
+	std::vector<PackageManager> managers;// = ReadConfigs(CONFIG_DIR);
+
+	print_debug("Running Command...");
 
 	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {
