@@ -9,8 +9,8 @@ cpp = meson.get_compiler('cpp')
 # Various variables that get passed as defines
 
 MAJOR_VER = '0'
-MINOR_VER = '1'
-PATCH_VER = '1'
+MINOR_VER = '2'
+PATCH_VER = '0'
 SEM_VER = '"' + MAJOR_VER + '.' + MINOR_VER + '.' + PATCH_VER + '"'
 DATA_DIR = get_option('data_dir')
 INSTALL_DIR = get_option('install_dir')
@@ -81,15 +81,38 @@ tomlplusplus_dep = dependency(
 
 tomlplusplus_inc = tomlplusplus_dep
 
+guile_dep = dependency('guile-3.0')
+
+# Convert guile scripts into C++ for binary inclusion
+# guile_to_header = custom_target('guile_to_header',
+# 	output : '../upm_script.h',
+# 	input : 'src/guile/upm.scm',
+# 	command : ['xxd', '-i', '@INPUT@', '@OUTPUT@'],
+# 	build_always_stale : false,
+# 	capture : false
+# )
+
+# configure_file(
+# 	input : 'src/guile/upm.scm',
+# 	output : 'src/guile/upm_script.h',
+# 	configuration : [
+# 			['COMMAND', 'xxd'],
+# 			['ARGS', '-i', '@INPUT@', '@OUTPUT@'],
+# 	],
+# )
+
+run_command('xxd', '-i', 'src/guile/upm.scm', 'src/guile/upm_script.h')
+
 executable(
 	'upm',
-	src_files,
+	[src_files],
 	cpp_args: [
 		'-std=c++20', 
 		additional_cxx_args,
 	],
 	dependencies: [
-		tomlplusplus_dep
+		tomlplusplus_dep,
+		guile_dep
 	],
 	install: true,
 	install_dir: INSTALL_DIR,
