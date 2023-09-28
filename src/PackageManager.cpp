@@ -5,7 +5,8 @@
 
 #include "common.hpp"
 
-PackageManager::PackageManager(std::string name) : Name(name) {}
+PackageManager::PackageManager(std::string name, bool sudo) 
+	: Name(name), Sudo(sudo) {}
 
 void PackageManager::AddGlobalArgMapping(std::string arg, std::string mapping) {
 	this->GlobalArgs.emplace_back(arg, mapping);
@@ -32,25 +33,31 @@ std::string PackageManager::GetName() const {
 }
 
 int PackageManager::ExecuteInstall(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Install.MapCmd(this->Name, args);
+	auto cmd = this->Install.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	print_debug("Packages: " << join_strings(packages, " ") << " | Command: " << cmd);
 
 	return std::system((cmd + " " + join_strings(packages, " ")).c_str());
 }
 
 int PackageManager::ExecuteRemove(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Remove.MapCmd(this->Name, args);
+	auto cmd = this->Remove.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	print_debug("Packages: " << join_strings(packages, " ") << " | Command: " << cmd);
 
 	return std::system((cmd + " " + join_strings(packages, " ")).c_str());
 }
 
 int PackageManager::ExecuteUpdate(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Update.MapCmd(this->Name, args);
+	auto cmd = this->Update.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	print_debug("Packages: " << join_strings(packages, " ") << " | Command: " << cmd);
 
 	if (packages.size() == 0)
 		return std::system((cmd).c_str());
@@ -60,9 +67,11 @@ int PackageManager::ExecuteUpdate(std::vector<std::string> packages, std::vector
 }
 
 int PackageManager::ExecuteSearch(std::string search_term, std::vector<std::string> args) {
-	auto cmd = this->Search.MapCmd(this->Name, args);
+	auto cmd = this->Search.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
+
+	print_debug("Search term: " << search_term << " | Command: " << cmd);
 	
 	return std::system((cmd + " " + search_term).c_str());;
 }

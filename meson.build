@@ -6,11 +6,11 @@ project(
 
 cpp = meson.get_compiler('cpp')
 
-# Various variables that get passed as defines
+# Various variables for initilzation, can be tweaked by options or present libraries
 
 MAJOR_VER = '0'
-MINOR_VER = '1'
-PATCH_VER = '1'
+MINOR_VER = '2'
+PATCH_VER = '0'
 SEM_VER = '"' + MAJOR_VER + '.' + MINOR_VER + '.' + PATCH_VER + '"'
 DATA_DIR = get_option('data_dir')
 INSTALL_DIR = get_option('install_dir')
@@ -19,6 +19,8 @@ additional_cxx_args = [
 	'-DVERSION=' + SEM_VER,
 	'-DDATA_DIR="' + DATA_DIR + '"',
 ]
+
+deps = []
 
 if get_option('debug')
 	# I'm not sure how to use meson built-in options via the script, so I have to make due
@@ -68,28 +70,23 @@ src_files = [
 	'src/common.cpp',
 	'src/Command.cpp',
 	'src/PackageManager.cpp',
-	'src/config_reader.cpp',
+	'src/Guile/guile_functions.cpp',
 	'src/main.cpp',
 ]
 
-tomlplusplus_dep = dependency(
-	'tomlplusplus', 
-	default_options: [
-		'build_lib=false'
-	]
-).partial_dependency(includes:true)
+guile_dep = dependency('guile-3.0')
 
-tomlplusplus_inc = tomlplusplus_dep
+run_command('xxd', '-i', 'src/Guile/upm.scm', 'src/Guile/upm_script.h')
 
 executable(
 	'upm',
-	src_files,
+	[src_files],
 	cpp_args: [
 		'-std=c++20', 
 		additional_cxx_args,
 	],
 	dependencies: [
-		tomlplusplus_dep
+		guile_dep
 	],
 	install: true,
 	install_dir: INSTALL_DIR,

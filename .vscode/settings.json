@@ -80,8 +80,14 @@
 		"xstddef": "cpp",
 		"xtr1common": "cpp",
 		"xtree": "cpp",
+<<<<<<< Updated upstream
 		"xutility": "cpp",
 		"coroutine": "cpp",
 		"resumable": "cpp"
 	}
+=======
+		"xutility": "cpp"
+	},
+	"C_Cpp.default.compileCommands": "builddir/compile_commands.json"
+>>>>>>> Stashed changes
 }

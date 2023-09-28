@@ -13,15 +13,26 @@ void Command::SetName(std::vector<std::string> name) {
 }
 
 // FIXME: This is hacky and doesn't work as intended
-std::string Command::MapCmd(std::string mng, std::vector<std::string> args) {
+std::string Command::MapCmd(std::string mng, std::vector<std::string> args, bool sudo) {
 	
 	// Collect cmd args
 	std::string cmd = std::accumulate(this->Name.begin(), this->Name.end(), std::string(), 
-		[mng](const std::string& a, const std::string& b) {
+		[mng, sudo](const std::string& a, const std::string& b) {
 		if (a.empty()) {
-			return mng + " " + b;
+			auto cmd_str = mng + " " + b;
+			if (sudo) {
+				cmd_str = "sudo " + cmd_str;
+			}
+
+			return cmd_str;
 		}
-		return a + " && " + mng + " " + b;
+
+		auto cmd_str = mng + " " + b;
+		if (sudo) {
+			cmd_str = "sudo " + cmd_str;
+		}
+
+		return a + " && " + cmd_str;
 	});
 
 
