@@ -10,10 +10,11 @@ class PackageManager {
 	Command Remove;
 	Command Update;
 	Command Search;
+	bool Sudo;
 
 public:
 
-	PackageManager(std::string name);
+	PackageManager(std::string name, bool sudo = false);
 	void AddGlobalArgMapping(std::string arg, std::string mapping);
 	void SetInstallCommand(Command cmd);
 	void SetRemoveCommand(Command cmd);

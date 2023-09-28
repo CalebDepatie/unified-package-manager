@@ -5,10 +5,7 @@
 #include "common.hpp"
 #include "PackageManager.hpp"
 
-#include "Authentication/stdAuth.hpp"
-// #include "Authentication/polkitAuth.hpp"
-
-#include "guile/guile_functions.hpp"
+#include "Guile/guile_functions.hpp"
 
 int main(int argc, char** argv) {
 
@@ -69,17 +66,6 @@ int main(int argc, char** argv) {
 	std::vector<PackageManager> managers = GetPackageManagers();// = ReadConfigs(CONFIG_DIR);
 
 	print_debug("Running Command...");
-
-	auto authenticator = stdAuth();
-	// auto authenticator = polkitAuth();
-
-	if (!authenticator.IsAuthenticated()) {
-		if constexpr (DEBUG_MODE) {
-			std::cout << "Not currently Authentication. Attempting to elevate." << std::endl;
-		}
-
-		authenticator.Authenticate();
-	}
 
 	// todo: Clean this up. hard to visually parse
 	if (program.is_subcommand_used(add_command)) {

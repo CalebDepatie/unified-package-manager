@@ -70,23 +70,13 @@ src_files = [
 	'src/common.cpp',
 	'src/Command.cpp',
 	'src/PackageManager.cpp',
-	'src/guile/guile_functions.cpp',
+	'src/Guile/guile_functions.cpp',
 	'src/main.cpp',
-	'src/Authentication/stdAuth.cpp',
-	# 'src/Authentication/polkitAuth.cpp',
 ]
 
 guile_dep = dependency('guile-3.0')
 
-<<<<<<< HEAD
-deps += tomlplusplus_dep
-
-# polkit_dep = dependency('polkit-gobject-1')
-# glib_dep = dependency('glib-2.0')
-# deps += [ polkit_dep, glib_dep ]
-=======
-run_command('xxd', '-i', 'src/guile/upm.scm', 'src/guile/upm_script.h')
->>>>>>> configuration
+run_command('xxd', '-i', 'src/Guile/upm.scm', 'src/Guile/upm_script.h')
 
 executable(
 	'upm',
@@ -96,11 +86,7 @@ executable(
 		additional_cxx_args,
 	],
 	dependencies: [
-<<<<<<< HEAD
-		deps,
-=======
 		guile_dep
->>>>>>> configuration
 	],
 	install: true,
 	install_dir: INSTALL_DIR,

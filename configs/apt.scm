@@ -3,4 +3,5 @@
 	"install"
 	"remove"
 	`("update" "upgrade")
-	"search")
+	"search"
+	#t)

@@ -8,12 +8,13 @@
 
 std::vector<PackageManager> package_managers;
 
-SCM add_pkg_manager(SCM name, SCM install, SCM remove, SCM update, SCM search) {
+SCM add_pkg_manager(SCM name, SCM install, SCM remove, SCM update, SCM search, SCM sudo) {
 
 		std::string name_str = scm_to_locale_string(name);
+		bool sudo_bool = scm_is_true(sudo);
 
 		print_debug("Adding a package manager: " << name_str);
-    PackageManager new_manager(name_str);
+    PackageManager new_manager(name_str, sudo_bool);
 
 		// Check if array
 		// Convert to command struct

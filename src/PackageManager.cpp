@@ -5,7 +5,8 @@
 
 #include "common.hpp"
 
-PackageManager::PackageManager(std::string name) : Name(name) {}
+PackageManager::PackageManager(std::string name, bool sudo) 
+	: Name(name), Sudo(sudo) {}
 
 void PackageManager::AddGlobalArgMapping(std::string arg, std::string mapping) {
 	this->GlobalArgs.emplace_back(arg, mapping);
@@ -32,7 +33,7 @@ std::string PackageManager::GetName() const {
 }
 
 int PackageManager::ExecuteInstall(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Install.MapCmd(this->Name, args);
+	auto cmd = this->Install.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
 
@@ -42,7 +43,7 @@ int PackageManager::ExecuteInstall(std::vector<std::string> packages, std::vecto
 }
 
 int PackageManager::ExecuteRemove(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Remove.MapCmd(this->Name, args);
+	auto cmd = this->Remove.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
 
@@ -52,7 +53,7 @@ int PackageManager::ExecuteRemove(std::vector<std::string> packages, std::vector
 }
 
 int PackageManager::ExecuteUpdate(std::vector<std::string> packages, std::vector<std::string> args) {
-	auto cmd = this->Update.MapCmd(this->Name, args);
+	auto cmd = this->Update.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
 
@@ -66,7 +67,7 @@ int PackageManager::ExecuteUpdate(std::vector<std::string> packages, std::vector
 }
 
 int PackageManager::ExecuteSearch(std::string search_term, std::vector<std::string> args) {
-	auto cmd = this->Search.MapCmd(this->Name, args);
+	auto cmd = this->Search.MapCmd(this->Name, args, this->Sudo);
 
 	std::cout << " -- " << this->Name << " -- " << std::endl;
 
