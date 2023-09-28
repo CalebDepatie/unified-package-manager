@@ -9,8 +9,8 @@ cpp = meson.get_compiler('cpp')
 # Various variables for initilzation, can be tweaked by options or present libraries
 
 MAJOR_VER = '0'
-MINOR_VER = '1'
-PATCH_VER = '1'
+MINOR_VER = '2'
+PATCH_VER = '0'
 SEM_VER = '"' + MAJOR_VER + '.' + MINOR_VER + '.' + PATCH_VER + '"'
 DATA_DIR = get_option('data_dir')
 INSTALL_DIR = get_option('install_dir')
@@ -70,34 +70,37 @@ src_files = [
 	'src/common.cpp',
 	'src/Command.cpp',
 	'src/PackageManager.cpp',
-	'src/config_reader.cpp',
+	'src/guile/guile_functions.cpp',
 	'src/main.cpp',
 	'src/Authentication/stdAuth.cpp',
 	# 'src/Authentication/polkitAuth.cpp',
 ]
 
-tomlplusplus_dep = dependency(
-	'tomlplusplus', 
-	default_options: [
-		'build_lib=false'
-	]
-).partial_dependency(includes:true)
+guile_dep = dependency('guile-3.0')
 
+<<<<<<< HEAD
 deps += tomlplusplus_dep
 
 # polkit_dep = dependency('polkit-gobject-1')
 # glib_dep = dependency('glib-2.0')
 # deps += [ polkit_dep, glib_dep ]
+=======
+run_command('xxd', '-i', 'src/guile/upm.scm', 'src/guile/upm_script.h')
+>>>>>>> configuration
 
 executable(
 	'upm',
-	src_files,
+	[src_files],
 	cpp_args: [
 		'-std=c++20', 
 		additional_cxx_args,
 	],
 	dependencies: [
+<<<<<<< HEAD
 		deps,
+=======
+		guile_dep
+>>>>>>> configuration
 	],
 	install: true,
 	install_dir: INSTALL_DIR,

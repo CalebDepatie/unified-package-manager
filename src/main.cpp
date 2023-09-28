@@ -1,25 +1,29 @@
 #include <iostream>
 #include <argparse/argparse.hpp>
+#include <libguile.h>
 
-#include "config_reader.hpp"
 #include "common.hpp"
+#include "PackageManager.hpp"
 
 #include "Authentication/stdAuth.hpp"
 // #include "Authentication/polkitAuth.hpp"
 
-#ifdef DEBUG 
-	const std::string CONFIG_DIR = "./configs/";
-#else
-	const std::string CONFIG_DIR = std::string(DATA_DIR) + "configs/";
-#endif
+#include "guile/guile_functions.hpp"
 
 int main(int argc, char** argv) {
 
-	if constexpr (DEBUG_MODE) {
-		std::cout << "DEBUG: Running in debug mode. Expect verbose output" << std::endl;
-	}
+	print_debug("Running in debug mode. Expect verbose output");
 
-	// -- Arguments Parsing SS--
+	// Initialize Guile
+	print_debug("Initializing Guile...");
+
+  scm_init_guile();
+  scm_with_guile(guile_main, 0);
+
+
+	// -- Arguments Parsing --
+	print_debug("Parsing arguments...");
+
 	argparse::ArgumentParser program("upm", VERSION);
 	program.add_description("Universal Package Manager - Interact with all your package managers from one place");
 
@@ -62,7 +66,9 @@ int main(int argc, char** argv) {
 
 	// -- Command Dispatch --
 	// Collect all the managers
-	std::vector<PackageManager> managers = ReadConfigs(CONFIG_DIR);
+	std::vector<PackageManager> managers = GetPackageManagers();// = ReadConfigs(CONFIG_DIR);
+
+	print_debug("Running Command...");
 
 	auto authenticator = stdAuth();
 	// auto authenticator = polkitAuth();
