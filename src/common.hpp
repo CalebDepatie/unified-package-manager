@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 // Keeping Macros out of other files for syntactic consistency
 

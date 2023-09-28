@@ -68,38 +68,11 @@ src_files = [
 	'src/common.cpp',
 	'src/Command.cpp',
 	'src/PackageManager.cpp',
-	'src/config_reader.cpp',
+	'src/guile/guile_functions.cpp',
 	'src/main.cpp',
 ]
 
-tomlplusplus_dep = dependency(
-	'tomlplusplus', 
-	default_options: [
-		'build_lib=false'
-	]
-).partial_dependency(includes:true)
-
-tomlplusplus_inc = tomlplusplus_dep
-
 guile_dep = dependency('guile-3.0')
-
-# Convert guile scripts into C++ for binary inclusion
-# guile_to_header = custom_target('guile_to_header',
-# 	output : '../upm_script.h',
-# 	input : 'src/guile/upm.scm',
-# 	command : ['xxd', '-i', '@INPUT@', '@OUTPUT@'],
-# 	build_always_stale : false,
-# 	capture : false
-# )
-
-# configure_file(
-# 	input : 'src/guile/upm.scm',
-# 	output : 'src/guile/upm_script.h',
-# 	configuration : [
-# 			['COMMAND', 'xxd'],
-# 			['ARGS', '-i', '@INPUT@', '@OUTPUT@'],
-# 	],
-# )
 
 run_command('xxd', '-i', 'src/guile/upm.scm', 'src/guile/upm_script.h')
 
@@ -111,7 +84,6 @@ executable(
 		additional_cxx_args,
 	],
 	dependencies: [
-		tomlplusplus_dep,
 		guile_dep
 	],
 	install: true,

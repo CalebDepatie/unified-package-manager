@@ -6,10 +6,10 @@
 using CmdArgMapping = std::pair<std::string, std::string>;
 
 class Command {
-	std::vector<std::string> Name;
 	std::vector<CmdArgMapping> Arguments;
 
 public:
+	std::vector<std::string> Name;
 
 	Command();
 	void AddArgMapping(std::string arg, std::string mapping);

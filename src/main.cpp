@@ -5,21 +5,7 @@
 #include "common.hpp"
 #include "PackageManager.hpp"
 
-#include "guile/upm_script.h"
-
-void* guile_main(void *data)
-{
-  // Load in the script
-  // scm_c_primitive_load((CONFIG_DIR + "upm.scm").c_str());
-	const char* guile_script = reinterpret_cast<const char*>(src_guile_upm_scm);
-	scm_c_eval_string(guile_script);
-
-  // Call a function from the script
-  // scm_call_1(scm_c_lookup("my-guile-function"), scm_from_int(42));
-
-  // Enter a Guile shell
-  // scm_shell(argc, argv);
-}
+#include "guile/guile_functions.hpp"
 
 int main(int argc, char** argv) {
 
@@ -77,7 +63,7 @@ int main(int argc, char** argv) {
 
 	// -- Command Dispatch --
 	// Collect all the managers
-	std::vector<PackageManager> managers;// = ReadConfigs(CONFIG_DIR);
+	std::vector<PackageManager> managers = GetPackageManagers();// = ReadConfigs(CONFIG_DIR);
 
 	print_debug("Running Command...");
 
